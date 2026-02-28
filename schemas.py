@@ -1,9 +1,9 @@
 from pydantic import BaseModel
 
 class UserBase(BaseModel):
-    password: str
+    name: str
     email: str
-    idade: int
+    age: int
 
 class UserCreate(UserBase):
     password: str
@@ -12,4 +12,4 @@ class UserResponse(UserBase):
     id: int
 
     class Config:
-        from_atrbibutes = True
+        from_attributes = True

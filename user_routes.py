@@ -5,7 +5,7 @@ from schemas import UserCreate, UserResponse
 from dependences import get_db
 from passlib.context import CryptContext
 
-router = APIRouter()
+user_router = APIRouter()
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -13,7 +13,7 @@ def hash_password(password:str):
     return pwd_context.hash(password)
 
 
-@router.post("/users/", response_model=UserResponse)
+@user_router.post("/users/", response_model=UserResponse)
 def create_user(user:UserCreate, db:Session = Depends(get_db)):
 
     db_user = db.query(User).filter(User.email == user.email).first()
@@ -39,14 +39,14 @@ def create_user(user:UserCreate, db:Session = Depends(get_db)):
     return new_user
 
 
-@router.get("/users", response_model = list[UserResponse])
+@user_router.get("/users", response_model = list[UserResponse])
 def list_users(db:Session=Depends(get_db)):
 
     users = db.query(User).all()
 
     return users    
 
-@router.get("/users/{user_id}", response_model=UserResponse)
+@user_router.get("/users/{user_id}", response_model=UserResponse)
 def get_user(user_id:int,db:Session=Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
 
@@ -58,7 +58,7 @@ def get_user(user_id:int,db:Session=Depends(get_db)):
     
     return user
 
-@router.delete("/users/{user_id}")
+@user_router.delete("/users/{user_id}")
 def delete_user(user_id:int, db:Session=Depends(get_db)):
 
     user = db.query(User).filter(User.id == user_id).first()
