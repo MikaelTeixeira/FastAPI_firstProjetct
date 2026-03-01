@@ -3,11 +3,9 @@ from fastapi import FastAPI
 app = FastAPI()
 
 from user_routes import user_router
-from order_routes import order_router
 
 
 app.include_router(user_router)
-app.include_router(order_router)
 
 #para rodar o servidor digitar no terminal: uvicorn main:app --reload
 
