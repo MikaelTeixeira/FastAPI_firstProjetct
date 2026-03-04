@@ -89,13 +89,17 @@ def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends(get_d
             detail="User not found"
         )
 
-    update_data = user_data.dict(exclude_unset=True)
+    update_data = user_data.model_dump(exclude_unset=True)
+
+    print("ANTES:", user.name)
 
     for field, value in update_data.items():
         if field == "password":
             user.hashed_password = hash_password(value)
         else:
             setattr(user, field, value)
+
+    print("DEPOIS:", user.name)
 
     db.commit()
     db.refresh(user)
