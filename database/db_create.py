@@ -22,9 +22,16 @@ def create_database():
 
     cur = conn.cursor()
 
-    cur.execute(f"CREATE DATABASE {nome_banco}")
+
+    cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (nome_banco,))
+    exists = cur.fetchone()
+
+    if exists:
+        print(f"Banco {nome_banco} ja existe")
+
+    else: 
+        cur.execute(f"CREATE DATABASE {nome_banco}")
+        print(f"Banco {nome_banco} criado com sucesso!")
 
     cur.close()
     conn.close()
-
-    print(f"Banco {nome_banco} criado com sucesso!")

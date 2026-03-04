@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 
-from db_setup import Base
+from .db_setup import Base
 
 class User(Base):
 
@@ -11,4 +11,5 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable =False)
     age = Column(Integer, nullable=False)
     hashed_password = Column(String, nullable=False)
+    activate_user = Column(Boolean, nullable=False, default=True)
 
