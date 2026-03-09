@@ -4,6 +4,7 @@ from database.models import User
 from schemas import UserCreate, UserResponse, UserUpdate
 from dependences import get_db
 from passlib.context import CryptContext
+from services import UserService
 
 user_router = APIRouter()
 
@@ -15,50 +16,27 @@ def hash_password(password:str):
 
 
 @user_router.post("/users/", response_model=UserResponse)
-def create_user(user:UserCreate, db:Session = Depends(get_db)):
+def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
-    db_user = db.query(User).filter(User.email == user.email).first()
+    service = UserService(db)
 
-    if db_user:
-        raise HTTPException(
-            status_code = 400,
-            detail="Email already registered"
-        )
-    new_user = User(
-        name=user.name,
-        email=user.email,
-        age=user.age,
-        hashed_password=hash_password(user.password)
-    )
-
-    db.add(new_user)
-
-    db.commit()
-
-    db.refresh(new_user)
-
-    return new_user
+    return service.create_user(user)
 
 
-@user_router.get("/users", response_model = list[UserResponse])
-def list_users(db:Session=Depends(get_db)):
+@user_router.get("/users/", response_model=list[UserResponse])
+def get_users(db: Session = Depends(get_db)):
 
-    users = db.query(User).filter(User.activate_user==True).all()
+    service = UserService(db)
 
-    return users    
+    return service.get_users()
+
 
 @user_router.get("/users/{user_id}", response_model=UserResponse)
-def get_user(user_id:int,db:Session=Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id, User.activate_user==True).first()
+def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
 
-    if not user:
-        raise HTTPException(
-            status_code = 404,
-            detail = "User not found"
-        )         
-    
-    return user
+    service = UserService(db)
 
+    return service.get_user_by_id(user_id)
 @user_router.delete("/users/{user_id}")
 def delete_user(user_id:int, db:Session=Depends(get_db)):
 
