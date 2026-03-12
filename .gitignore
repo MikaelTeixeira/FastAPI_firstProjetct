@@ -1,0 +1,47 @@
+# Bytecode Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ambiente virtual
+venv/
+.env/
+.venv/
+
+# Variáveis de ambiente
+.env
+.env.*
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Banco de dados local
+*.sqlite3
+
+# Arquivos temporários
+*.tmp
+*.swp
+
+# Cache
+.cache/
+.pytest_cache/
+
+# Build
+dist/
+build/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Arquivos grandes ou uploads
+uploads/
