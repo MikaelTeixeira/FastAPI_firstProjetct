@@ -2,12 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from database.models import User
 from schemas import UserCreate
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def hash_password(password:str):
-    return pwd_context.hash(password)
+from security import hash_password, verify_password
 
 
 class UserService:
@@ -39,6 +34,18 @@ class UserService:
         self.db.refresh(new_user)
 
         return new_user
+
+    def authenticate_user(self, email: str, password: str):
+        user = (
+            self.db.query(User)
+            .filter(User.email == email, User.activate_user == True)
+            .first()
+        )
+
+        if not user or not verify_password(password, user.hashed_password):
+            return None
+
+        return user
     
     def get_users(self):
 
